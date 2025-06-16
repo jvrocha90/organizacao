@@ -4,17 +4,16 @@ import time
 from copy import deepcopy
 import matplotlib.pyplot as plt
 
-# 1) --- Carrega dados -------------------
 df = pd.read_csv("SAP-4000.csv")
 df.columns = df.columns.str.strip()
-coluna = "Exam_Score"      # <-- use seu campo numérico
+coluna = "Exam_Score"    
 if coluna not in df.columns:
     raise ValueError(f"Coluna '{coluna}' não encontrada.")
 dados = df[coluna].dropna().astype(int).tolist()
 
 # Subconjuntos (1k, 4k e 10k)
 dados_1k  = dados[:1000]
-dados_4k  = dados[:4000]           # se quiser usar
+dados_4k  = dados[:4000]          
 dados_10k = (dados * 3)[:10000]
 random.shuffle(dados_10k)
 
@@ -25,7 +24,8 @@ def preparar_casos(vetor):
         "pior_caso"  : sorted(vetor, reverse=True)
     }
 
-# 2) --- Algoritmos com contadores --------
+# Algoritmos com contadores 
+
 def bubble_sort(arr):
     a = arr[:]
     n = len(a)
@@ -69,7 +69,7 @@ def selection_sort(arr):
             troc += 1
     return a, comp, troc
 
-def insertion_sort(arr):  # (caso queira incluir)
+def insertion_sort(arr): 
     a = arr[:]
     comp = troc = 0
     for i in range(1, len(a)):
@@ -85,7 +85,6 @@ def insertion_sort(arr):  # (caso queira incluir)
         troc += 1
     return a, comp, troc
 
-# --- Merge Sort -----
 def merge_sort(arr):
     comp = troc = 0
     def merge(esq, dir):
@@ -109,7 +108,6 @@ def merge_sort(arr):
     result = ms(arr[:])
     return result, comp, troc
 
-# --- Quick Sort -----
 def quick_sort(arr):
     comp = troc = 0
     a = arr[:]
@@ -121,7 +119,6 @@ def quick_sort(arr):
             qs(p + 1, high)
     def part(low, high):
         nonlocal comp, troc
-        # Escolhe um pivô aleatório e coloca no final
         pivot_idx = random.randint(low, high)
         a[high], a[pivot_idx] = a[pivot_idx], a[high]
         pivot = a[high]
@@ -138,7 +135,6 @@ def quick_sort(arr):
     qs(0, len(a) - 1)
     return a, comp, troc
 
-# --- Heap Sort -----
 def heap_sort(arr):
     a = arr[:]
     comp = troc = 0
@@ -158,17 +154,17 @@ def heap_sort(arr):
             a[i], a[largest] = a[largest], a[i]
             troc += 1
             heapify(largest, heap_size)
-    # build max-heap
+  
     for i in range(n // 2 - 1, -1, -1):
         heapify(i, n)
-    # extract
+  
     for i in range(n - 1, 0, -1):
         a[0], a[i] = a[i], a[0]
         troc += 1
         heapify(0, i)
     return a, comp, troc
 
-# 3) --- Função de teste ------------------
+# Função de teste 
 def testar(alg_nome, funcao, vetor, tam, caso):
     inicio = time.perf_counter()
     _, comp, troc = funcao(vetor)
@@ -182,7 +178,7 @@ def testar(alg_nome, funcao, vetor, tam, caso):
         "Trocas"     : troc
     }
 
-# 4) --- Executa e coleta -----------------
+# Executa e coleta 
 algoritmos = [
     ("Bubble Sort"         , bubble_sort),
     ("Improved Bubble Sort", bubble_sort_improved),
@@ -244,4 +240,5 @@ plt.legend()
 plt.grid(True)
 plt.tight_layout()
 plt.show()
+
 
